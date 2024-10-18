@@ -12,6 +12,21 @@ export interface CommonResponse{
     message:string
 }
 
+export interface Connections{
+    userId:string,
+    connections:User[]
+}
+
+
+// export User
+
+export interface RequestResponse{
+    _id:string,
+    status:string,
+    sender:User,
+    receiver:string
+}
+
 
 export interface User{
     _id:string

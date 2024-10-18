@@ -28,12 +28,26 @@ export class SearchUsersComponent {
 
   ngOnInit(): void {
     this.isToaster = true
+
+    this.userService.getSendRequest().subscribe({
+      next:(res)=>{
+        res.map((request)=>{
+          this.addedUsers.add(request.receiver)
+        })
+      },
+      error:(err)=>{
+        console.log(err);
+      }
+    })
   }
   
 
   ngOnDestroy(): void {
     this.isToaster = false;
   }
+
+
+  
 
   onAddUser(user: User): void {
     if (!this.addedUsers.has(user._id)) {
@@ -53,7 +67,6 @@ export class SearchUsersComponent {
         this.userService.searchUsers(this.input).subscribe({
           next: (res) => {
             this.isLoading = false
-            console.log(res);
             this.users = res;
           },
           error: (err) => {
