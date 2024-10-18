@@ -1,0 +1,106 @@
+<!-- <div class="bg-gradient-to-br from-purple-500 to-indigo-600 min-h-screen flex items-center justify-center p-4"> -->
+    <div class="chat-container bg-white rounded-lg shadow-2xl overflow-hidden min-h-screen w-full flex animate-fadeIn">
+        <!-- Sidebar -->
+        <app-navbar class="w-1/5"></app-navbar>
+
+        <!-- Main Chat Area -->
+        <main class="flex-1 flex flex-col">
+            <!-- Chat Header -->
+            <div class="bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <img src="https://picsum.photos/200/300" alt="Chat" class="w-12 h-12 rounded-full border-2 border-indigo-300">
+                    <div>
+                        <h2 class="font-semibold text-lg text-gray-800">Project Team</h2>
+                        <p class="text-sm text-gray-500">5 members • 2 online</p>
+                    </div>
+                </div>
+                <div class="space-x-2">
+                    <button class="text-gray-500 hover:text-indigo-600 transition"><i class="fas fa-phone"></i></button>
+                    <button class="text-gray-500 hover:text-indigo-600 transition"><i class="fas fa-video"></i></button>
+                    <button class="text-gray-500 hover:text-indigo-600 transition"><i class="fas fa-info-circle"></i></button>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div class="flex-1 p-4 overflow-y-auto bg-gray-50">
+                <div class="space-y-6">
+                    <!-- <div class="flex items-end">
+                        <img src="https://picsum.photos/200/300" alt="User" class="w-8 h-8 rounded-full mr-2">
+                        <div class="bg-white p-3 rounded-lg rounded-bl-none shadow max-w-xs">
+                            <p class="text-sm text-gray-800">Hey team, how's the progress on the new feature?</p>
+                            <p class="text-xs text-gray-500 mt-1">10:30 AM</p>
+                        </div>
+                    </div>
+                    <div class="flex items-end justify-end">
+                        <div class="bg-indigo-500 text-white p-3 rounded-lg rounded-br-none shadow max-w-xs ml-auto">
+                            <p class="text-sm">We're almost done with the backend. Frontend needs some work.</p>
+                            <p class="text-xs text-indigo-200 mt-1">10:32 AM</p>
+                        </div>
+                    </div>
+                    <div class="flex items-end">
+                        <img src="https://picsum.photos/200/300" alt="User" class="w-8 h-8 rounded-full mr-2">
+                        <div class="bg-white p-3 rounded-lg rounded-bl-none shadow max-w-xs">
+                            <p class="text-sm text-gray-800">Great! Let's have a quick call to discuss the remaining tasks.</p>
+                            <p class="text-xs text-gray-500 mt-1">10:35 AM</p>
+                        </div>
+                    </div> -->
+                    @for (msg of messages; track msg) {
+                        <div class="flex items-end justify-end">
+                            <div class="bg-indigo-500 text-white p-3 rounded-lg rounded-br-none shadow max-w-xs ml-auto">
+                                <p class="text-sm">{{msg}}</p>
+                                <!-- <p class="text-xs text-indigo-200 mt-1">10:32 AM</p> -->
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Message Input -->
+            <div class="bg-white border-t border-gray-200 p-4">
+                <div class="flex items-center space-x-3">
+                    <button class="text-gray-500 hover:text-indigo-600 transition"><i class="fas fa-plus"></i></button>
+                    <input (keydown.enter)="sendMessage()"  type="text" placeholder="Type a message..." [(ngModel)]="message" class="flex-1 p-2 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-0 focus:ring-indigo-400 message-input">
+                    <button (click)="toggleEmoji()" class="text-gray-500 hover:text-indigo-600 transition">
+                        <svg data-slot="icon" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" class="w-6" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z"></path>
+                          </svg>
+                    </button>
+                    <button (click)="sendMessage()" class="bg-indigo-500 text-white p-2 rounded-full hover:bg-indigo-600 transition">
+                        <svg data-slot="icon" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" class="w-6" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification -->
+    <div class="fixed bottom-4 right-4 w-72 bg-white rounded-lg shadow-lg p-4 animate-fadeIn" id="notification" style="display: none;">
+        <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center space-x-2">
+                <img src="https://picsum.photos/200/300" alt="User" class="w-10 h-10 rounded-full">
+                <div>
+                    <p class="font-semibold text-gray-800">New Message</p>
+                    <p class="text-xs text-gray-500">From: Alice Smith</p>
+                </div>
+            </div>
+            <button class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
+        </div>
+        <p class="text-sm text-gray-700 mb-3">Hey, are you available for a quick chat?</p>
+        <div class="flex justify-end space-x-2">
+            <button class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm transition">Dismiss</button>
+            <button class="px-3 py-1 bg-indigo-500 text-white rounded hover:bg-indigo-600 text-sm transition">Reply</button>
+        </div>
+    </div>
+
+    <script>
+        // Show notification after 3 seconds
+        setTimeout(() => {
+            document.getElementById('notification').style.display = 'block';
+        }, 3000);
+    </script>
+
+<emoji-mart (emojiClick)="addEmoji($event)" *ngIf="isEmojiToggle" [style]="{ position: 'absolute', bottom: '70px', right: '20px' }" [virtualize]='false' ></emoji-mart>
+
+<!-- </div> -->
