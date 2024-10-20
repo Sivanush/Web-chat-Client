@@ -8,6 +8,14 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
     const router = inject(Router)
     const token = localStorage.getItem('token')
 
+
+    const isCloudinaryRequest = req.url.includes('cloudinary.com');
+    if (isCloudinaryRequest) {
+      return next(req);
+    }
+
+    
+
     if (token) {
         try {
             const decodedToken: Decode.JwtPayload = Decode.jwtDecode<Decode.JwtPayload>(token);

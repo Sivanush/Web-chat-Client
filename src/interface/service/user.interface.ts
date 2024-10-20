@@ -33,4 +33,5 @@ export interface User{
     image:string
     username:string,
     email:string
+    status?:string
 }

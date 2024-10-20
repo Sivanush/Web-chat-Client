@@ -3,6 +3,8 @@ import { CommonResponse, Connections, IUserAuthentication, RequestResponse, User
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment.development';
 import { Observable } from 'rxjs';
+import { jwtDecode } from 'jwt-decode'; 'jwt-decode';
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +13,20 @@ export class UserService {
 
   private serverUrl = environment.serverUrl
   constructor(private http:HttpClient) { }
+
+
+
+  getUserId(){
+    const token = localStorage.getItem('token');
+    let decoded:{userId:string} = jwtDecode(token as string)
+    return decoded.userId
+  }
+
+
+
+
+
+
 
 
     userAuthentication(userData:IUserAuthentication):Observable<UserAuthenticationResponse>{
@@ -40,5 +56,9 @@ export class UserService {
 
     getAllConnections():Observable<Connections>{
       return this.http.get<Connections>(`${this.serverUrl}/user/connections`)
+    }
+
+    getUserData(userId:string):Observable<User>{
+      return this.http.get<User>(`${this.serverUrl}/user/user-data/${userId}`)
     }
 }
