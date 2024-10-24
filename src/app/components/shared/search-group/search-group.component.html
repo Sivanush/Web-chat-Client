@@ -1,0 +1,54 @@
+<dialog id="search_user" class="modal backdrop-blur-sm w-full z-20">
+    <ngx-sonner-toaster *ngIf="isToaster" class="z-[1000]" position="top-right" richColors/>
+    <div class="modal-box bg-gray-50 max-w-2xl">
+      <h3 class="text-xl font-bold text-indigo-600 mb-4">Search Groups</h3>
+  
+      <!-- Search input -->
+      <div class="relative mb-6">
+        <input (input)="searchGroups()" [(ngModel)]="input" type="text" id="user-search" placeholder="Search users..."
+          class="w-full p-2 pl-10 rounded-full bg-white border border-gray-300 focus:outline-none focus:ring-0 focus:ring-indigo-400">
+        <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </div>
+  
+      <!-- Results list -->
+      <ul class="space-y-2 h-auto overflow-y-auto scrollbar-hide mb-4">
+        @for (group of groups; track group) {
+        <li
+          class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm hover:bg-indigo-50 transition duration-150">
+          <div class="flex items-center space-x-3">
+            <img [src]="group.image" alt="User" class="w-10 h-10 rounded-full border-2">
+            <div>
+              <p class="font-semibold text-gray-800">{{group.name}}</p>
+              <!-- <p class="text-sm text-gray-500">{{group.email}}</p> -->
+            </div>
+          </div>
+          <button (click)="onJoinGroup(group._id!)"
+            class="px-3 py-1 bg-indigo-500 text-white rounded-full hover:bg-indigo-600 text-sm transition"
+            [disabled]="joinedGroups.has(group._id)" [class.opacity-50]="joinedGroups.has(group._id)">{{
+            joinedGroups.has(group._id) ? 'Joined' : 'Join' }}</button>
+        </li>
+        }
+      </ul>
+  
+  
+      <!-- Action buttons -->
+      <div class="flex justify-end space-x-2">
+        <button class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 text-sm transition"
+          onclick="search_user.close()">Cancel</button>
+        <button class="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 text-sm transition"
+          onclick="search_user.close()">Done</button>
+      </div>
+    </div>
+</dialog>
+
+
+
+
+
+<!-- <dialog id="addUserModal" class="modal backdrop-blur-sm w-full z-20">
+
+</dialog> -->

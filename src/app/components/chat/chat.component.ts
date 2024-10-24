@@ -63,14 +63,14 @@ export class ChatComponent {
       }
     })
 
-    this.chatService.getLatestMessage().subscribe({
-      next: (res) => {
-        this.messages.push(res)
-      },
-      error: (err) => {
-        console.log(err);
-      }
-    })
+    // this.chatService.getLatestMessage().subscribe({
+    //   next: (res) => {
+    //     this.messages.push(res)
+    //   },
+    //   error: (err) => {
+    //     console.log(err);
+    //   }
+    // })
 
     // console.log(this.messages);
 

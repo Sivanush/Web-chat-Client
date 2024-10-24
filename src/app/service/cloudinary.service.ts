@@ -25,7 +25,7 @@ export class CloudinaryService {
     formData.append('file', file);
     formData.append('upload_preset', this.uploadPreset); 
     
-    return this.http.post<cloudinaryResponse>(`https://api.cloudinary.com/v1_1/${this.cloudName}/image/upload`, formData);
+    return this.http.post<cloudinaryResponse>(`https://api.cloudinary.com/v1_1/${this.cloudName}/image/upload`, formData)
   }
 
   uploadVideo(file: File): Observable<cloudinaryResponse> {

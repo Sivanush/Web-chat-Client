@@ -1,127 +1,135 @@
-<!-- <div class="bg-gradient-to-br from-purple-500 to-indigo-600 min-h-screen flex items-center justify-center p-4"> -->
-    <div class="chat-container bg-white rounded-lg shadow-2xl overflow-hidden min-h-screen w-full flex animate-fadeIn">
-        <!-- Sidebar -->
-        <aside class="w-1/4 bg-gray-50 p-4 overflow-y-auto border-r">
-            <div class="mb-6">
-                <h1 class="text-2xl font-bold text-indigo-600">ChitChat</h1>
-                <p class="text-sm text-gray-500">Welcome back, John Doe</p>
-            </div>
-            
-            <!-- Search -->
-            <div class="relative mb-6">
-                <input type="text" placeholder="Search chats..." class="w-full p-2 pl-8 rounded-full bg-white border border-gray-300 focus:outline-none focus:ring-0 focus:ring-indigo-400">
-                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-            </div>
-
-            <!-- Tabs -->
-            <div class="flex mb-6 bg-gray-200 rounded-full p-1">
-                <button [routerLink]="['/chat']" class="flex-1 py-2 px-4 rounded-full   text-sm font-medium">Chats</button>
-                <button [routerLink]="['/group-chat']" class="flex-1 py-2 px-4 rounded-full bg-indigo-500 text-white text-sm font-medium" >Groups</button>
-            </div>
-
-            <!-- Chat List -->
-            <ul class="space-y-4">
-                <li class="flex items-center space-x-3 p-3 bg-white rounded-lg shadow-sm hover:bg-indigo-50 transition duration-150 cursor-pointer">
-                    <img src="https://picsum.photos/200/300" alt="User" class="w-10 h-10 rounded-full border-2 border-indigo-300">
-                    <div class="flex-1">
-                        <p class="font-semibold text-gray-800">Alice Smith</p>
-                        <p class="text-sm text-gray-500 truncate">Hey, how's it going?</p>
-                    </div>
-                    <span class="text-xs text-indigo-500 font-semibold">2m</span>
-                </li>
-                <li class="flex items-center space-x-3 p-3 bg-indigo-50 rounded-lg shadow-sm transition duration-150 cursor-pointer">
-                    <img src="https://picsum.photos/200/300" alt="User" class="w-10 h-10 rounded-full border-2 border-indigo-500">
-                    <div class="flex-1">
-                        <p class="font-semibold text-gray-800">Project Team</p>
-                        <p class="text-sm text-gray-500 truncate">Bob: Let's schedule a call</p>
-                    </div>
-                    <span class="text-xs text-indigo-500 font-semibold">5m</span>
-                </li>
-                <!-- Add more chat items here -->
-            </ul>
-        </aside>
-
-        <!-- Main Chat Area -->
-        <main class="flex-1 flex flex-col">
-            <!-- Chat Header -->
-            <div class="bg-white border-b border-gray-200 p-4 flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <img src="https://picsum.photos/200/300" alt="Chat" class="w-12 h-12 rounded-full border-2 border-indigo-300">
-                    <div>
-                        <h2 class="font-semibold text-lg text-gray-800">Project Team</h2>
-                        <p class="text-sm text-gray-500">5 members • 2 online</p>
-                    </div>
-                </div>
-                <div class="space-x-2">
-                    <button class="text-gray-500 hover:text-indigo-600 transition"><i class="fas fa-phone"></i></button>
-                    <button class="text-gray-500 hover:text-indigo-600 transition"><i class="fas fa-video"></i></button>
-                    <button class="text-gray-500 hover:text-indigo-600 transition"><i class="fas fa-info-circle"></i></button>
+<div class="chat-container bg-white rounded-lg shadow-2xl h-screen flex">
+    <!-- Sidebar -->
+    <app-group-chat-navbar (groupId)="getGroupId($event)"></app-group-chat-navbar>
+    <!-- Main Chat Area -->
+    <main class="flex-1 flex flex-col relative">
+        <!-- Chat Header -->
+        <div class="bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <label for="my-drawer-2" class="drawer-button lg:hidden">
+                    <svg data-slot="icon" class="h-8" fill="blue" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+                      </svg>
+                </label>
+                <img [src]="" 
+                    class="w-12 h-12 rounded-full border-2 border-gray-300 shadow-sm" />
+                <div>
+                    <h2 class="font-semibold text-lg text-gray-800">Group Name</h2>
+                    <!-- <p class="text-sm text-gray-500">{{receiverData.status}}</p> -->
                 </div>
             </div>
+            <div class="space-x-2">
+                <button class="text-gray-500 hover:text-indigo-600 transition"><i class="fas fa-phone"></i></button>
+                <button class="text-gray-500 hover:text-indigo-600 transition"><i class="fas fa-video"></i></button>
+                <button class="text-gray-500 hover:text-indigo-600 transition"><i class="fas fa-info-circle"></i></button>
+            </div>
+        </div>
 
-            <!-- Messages -->
-            <div class="flex-1 p-4 overflow-y-auto bg-gray-50">
+
+        
+
+
+
+        <!-- Chat Messages -->
+        <div *ngIf="groupId" class="flex-1 flex flex-col h-[calc(100vh-160px)]">
+            <div #scrollContainer class="flex-1 p-4 overflow-y-auto bg-gray-50">
                 <div class="space-y-6">
-                    <div class="flex items-end">
-                        <img src="https://picsum.photos/200/300" alt="User" class="w-8 h-8 rounded-full mr-2">
-                        <div class="bg-white p-3 rounded-lg rounded-bl-none shadow max-w-xs">
-                            <p class="text-sm text-gray-800">Hey team, how's the progress on the new feature?</p>
-                            <p class="text-xs text-gray-500 mt-1">10:30 AM</p>
+                    <div *ngFor="let msg of messages" class="flex" [ngClass]="{'justify-end': msg.sender === userId}">
+                        @if(msg.type === 'text'){
+                            <div class="flex items-end" [ngClass]="{'flex-row-reverse': msg.sender === userId}">
+                                <img *ngIf="msg.sender !== userId" [src]="msg.receiver.image" alt="User" class="w-8 h-8 rounded-full mr-2" />
+                                <div class="p-3 rounded-lg shadow max-w-xs" [ngClass]="{
+                                    'bg-indigo-500 text-white rounded-br-none ml-2': msg.sender === userId,
+                                    'bg-white text-gray-800 rounded-bl-none mr-2': msg.sender !== userId
+                                }">
+                                    <p class="text-sm">{{ msg.content }}</p>
+                                    <p class="text-xs mt-1" [ngClass]="{ 'text-indigo-200': msg.sender === userId, 'text-gray-500': msg.sender !== userId }">
+                                        {{ msg.timestamp | date:'shortTime' }}
+                                    </p>
+                                </div>
+                            </div>
+                        }@else if(msg.type === 'image' ){
+                            <div class="flex items-end" [ngClass]="{'flex-row-reverse': msg.sender === userId}">
+                            <img class=" h-52" [src]="msg.content" [alt]="msg.receiver._id">
                         </div>
-                    </div>
-                    <div class="flex items-end justify-end">
-                        <div class="bg-indigo-500 text-white p-3 rounded-lg rounded-br-none shadow max-w-xs ml-auto">
-                            <p class="text-sm">We're almost done with the backend. Frontend needs some work.</p>
-                            <p class="text-xs text-indigo-200 mt-1">10:32 AM</p>
+                        }@else if(msg.type === 'video' ){
+                        <div class="flex items-end" [ngClass]="{'flex-row-reverse': msg.sender === userId}">
+                            <video class="h-64" [src]="msg.content" controls ></video>
                         </div>
-                    </div>
-                    <div class="flex items-end">
-                        <img src="https://picsum.photos/200/300" alt="User" class="w-8 h-8 rounded-full mr-2">
-                        <div class="bg-white p-3 rounded-lg rounded-bl-none shadow max-w-xs">
-                            <p class="text-sm text-gray-800">Great! Let's have a quick call to discuss the remaining tasks.</p>
-                            <p class="text-xs text-gray-500 mt-1">10:35 AM</p>
-                        </div>
+                        }
                     </div>
                 </div>
             </div>
 
             <!-- Message Input -->
-            <div class="bg-white border-t border-gray-200 p-4">
+            <div class="bg-white border-t border-gray-200 p-4 w-full">
+                <div *ngIf="selectedFile" class="p-4 bg-white shadow-lg rounded-t-lg">
+                    <div *ngIf="selectedFileType === 'image'">
+                        <img [src]="filePreview" alt="Selected Image" class="max-w-2xl max-h-60 object-contain rounded-lg" />
+                    </div>
+                    <div *ngIf="selectedFileType === 'video'">
+                        <video [src]="filePreview" controls class="max-w-full max-h-60 object-contain rounded-lg"></video>
+                    </div>
+                    <div *ngIf="selectedFileType === 'pdf'">
+                        <embed [src]="filePreview" type="application/pdf" width="100%" height="200px" />
+                    </div>
+                </div>
+
                 <div class="flex items-center space-x-3">
-                    <button class="text-gray-500 hover:text-indigo-600 transition"><i class="fas fa-plus"></i></button>
-                    <input type="text" placeholder="Type a message..." class="flex-1 p-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-0 focus:ring-indigo-400 message-input">
-                    <button class="text-gray-500 hover:text-indigo-600 transition"><i class="far fa-smile"></i></button>
-                    <button class="bg-indigo-500 text-white p-2 rounded-full hover:bg-indigo-600 transition">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
+                    <input #file type="file" id="fileInput" (change)="onFileSelect($event)" accept="image/*,video/*,application/pdf" hidden>
+                    <div *ngIf="!selectedFileType" (click)="file.click()" class="cursor-pointer">
+                        <svg data-slot="icon" fill="none" stroke-width="1" class="h-7 w-7" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"></path>
+                          </svg>
+                    </div>
+
+                    <input [(ngModel)]="message" (keyup.enter)="sendMessage()" placeholder="Type your message..." 
+                           class="w-full p-2 border rounded-lg focus:outline-none focus:ring-0 bg-white" />
+
+
+                           <button (click)="toggleEmoji()" class="text-gray-500 hover:text-indigo-600 transition">
+                            <svg data-slot="icon" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" class="w-6" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z"></path>
+                              </svg>
+                        </button>
+
+                    <button (click)="sendMessage()" class="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition">Send</button>
                 </div>
             </div>
-        </main>
-    </div>
+        </div>
 
-    <!-- Notification -->
-    <div class="fixed bottom-4 right-4 w-72 bg-white rounded-lg shadow-lg p-4 animate-fadeIn" id="notification" style="display: none;">
-        <div class="flex items-center justify-between mb-2">
-            <div class="flex items-center space-x-2">
-                <img src="https://picsum.photos/200/300" alt="User" class="w-10 h-10 rounded-full">
-                <div>
-                    <p class="font-semibold text-gray-800">New Message</p>
-                    <p class="text-xs text-gray-500">From: Alice Smith</p>
-                </div>
+        <ng-container *ngIf="!groupId">
+            <div class="flex flex-col items-center justify-center flex-1 text-gray-500">
+                <h2 class="text-lg font-semibold">No conversation selected</h2>
+                <p>Please select a conversation to start chatting!</p>
             </div>
-            <button class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
-        </div>
-        <p class="text-sm text-gray-700 mb-3">Hey, are you available for a quick chat?</p>
-        <div class="flex justify-end space-x-2">
-            <button class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm transition">Dismiss</button>
-            <button class="px-3 py-1 bg-indigo-500 text-white rounded hover:bg-indigo-600 text-sm transition">Reply</button>
-        </div>
-    </div>
+        </ng-container>
+    </main>
+</div>
 
-    <script>
-        // Show notification after 3 seconds
-        setTimeout(() => {
-            document.getElementById('notification').style.display = 'block';
-        }, 3000);
-    </script>
-<!-- </div> -->
+<div class="fixed bottom-4 right-4 w-72 bg-white rounded-lg shadow-lg p-4 animate-fadeIn" id="notification" style="display: none;">
+    <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center space-x-2">
+            <img src="https://picsum.photos/200/300" alt="User" class="w-10 h-10 rounded-full">
+            <div>
+                <p class="font-semibold text-gray-800">New Message</p>
+                <p class="text-xs text-gray-500">From: Alice Smith</p>
+            </div>
+        </div>
+        <button class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
+    </div>
+    <p class="text-sm text-gray-700 mb-3">Hey, are you available for a quick chat?</p>
+    <div class="flex justify-end space-x-2">
+        <button class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm transition">Dismiss</button>
+        <button class="px-3 py-1 bg-indigo-500 text-white rounded hover:bg-indigo-600 text-sm transition">Reply</button>
+    </div>
+</div>
+
+<script>
+    // Show notification after 3 seconds
+    setTimeout(() => {
+        document.getElementById('notification').style.display = 'block';
+    }, 3000);
+</script>
+
+<emoji-mart (emojiClick)="addEmoji($event)" *ngIf="isEmojiToggle" [style]="{ position: 'absolute', bottom: '70px', right: '20px' }" [virtualize]='false' ></emoji-mart>

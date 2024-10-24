@@ -1,0 +1,63 @@
+<div class="drawer lg:drawer-open z-50 bg-white">
+  
+    <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+  
+    <!-- Sidebar content -->
+    <div class="drawer-side">
+        <label for="my-drawer-2" class="drawer-overlay"></label>
+        
+        <aside class="w-80 p-4 border-r h-screen flex flex-col justify-between overflow-hidden bg-white">
+            <!-- Upper section -->
+            <div class="flex-1">
+                <div class="mb-6">
+                    <h1 class="text-2xl font-bold text-indigo-600">ChitChat</h1>
+                    <p class="text-sm text-gray-500">Welcome back, John Doe</p>
+                </div>
+  
+                <div class="relative mb-6">
+                    <input
+                        type="text"
+                        placeholder="Search chats..."
+                        class="w-full p-2 pl-8 rounded-full bg-white border border-gray-300 focus:outline-none focus:ring-0 focus:ring-indigo-400"
+                    />
+                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                </div>
+  
+                <div class="flex mb-6 bg-gray-200 rounded-full p-1">
+                    <button [routerLink]="['/chat']" routerLinkActive="router-link-active"
+                            class="flex-1 py-2 px-4 rounded-full text-sm font-medium animate-slide-in-right">Chats</button>
+                    <button [routerLink]="['/group-chat']" routerLinkActive="router-link-active"
+                            class="flex-1 py-2 bg-indigo-500 text-white px-4 rounded-full text-sm font-medium animate-slide-in-left">Groups</button>
+                  </div>
+                  
+  
+                <ul class="space-y-4 overflow-y-auto h-[calc(100vh-290px)] lg:h-[59vh] scrollbar-hide">
+                    <li (click)="emitTheGroupId(group._id!)"   *ngFor="let group of groups" class="flex items-center space-x-3 p-3 bg-white rounded-lg shadow-sm hover:bg-indigo-50 transition duration-150 cursor-pointer">
+                        <img [src]="group.image" alt="User" class="w-10 h-10 rounded-full border-2 object-cover" />
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800">{{group.name}}</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+  
+            <div class="flex items-center gap-3 p-2">
+
+                <button onclick="create_group.showModal()" class=" bg-indigo-500 rounded-md p-1 focus:outline-none">
+                    <svg data-slot="icon" fill="white" stroke-width="1.5" stroke="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-6 w-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
+                    </svg>
+                </button>
+
+                <button  onclick="search_user.showModal()" class="flex-1 py-2 px-4 bg-indigo-500 text-white rounded-lg text-sm font-medium transition duration-150 ease-in-out hover:bg-indigo-600 focus:outline-none" title="Add Users">Search Group</button>
+                <button onclick="notificationModal.showModal()" class="relative flex items-center justify-center w-10 h-10 text-black rounded-full focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    </svg>
+                    <span class="absolute top-[6px] right-[6px] bg-red-600 text-red-600 text-xs font-bold rounded-full h-2 w-2 flex items-center justify-center"></span>
+                </button>
+            </div>
+        </aside>
+    </div>
+  </div>
+  

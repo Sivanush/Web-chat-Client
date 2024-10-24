@@ -49,7 +49,17 @@ export class AuthComponent {
     const clientId = '765106197171-9tbkjqu9g1om8pfi14jbq09bs6goom5m.apps.googleusercontent.com'
 
 
-
+    const loadGoogleButton = () => {
+      google.accounts.id.renderButton(
+        document.getElementById('google-btn') as HTMLElement, {
+        theme: 'outline',
+        size: 'medium',
+        shape: 'rectangle',
+        text: 'continue_with',
+        width: '500px',
+        type: 'standard',
+      });
+    };
 
     google.accounts.id.initialize({
       auto_select: false,
@@ -61,16 +71,31 @@ export class AuthComponent {
     });
 
 
-    google.accounts.id.renderButton(
-      document.getElementById('google-btn') as HTMLElement, {
-      theme: 'outline',
-      size: 'medium',
-      shape: 'rectangle',
-      text: 'continue_with',
-      width: '500px',
-      type: 'standard',
-    }
-    );
+  
+
+    // google.accounts.id.renderButton(
+    //   document.getElementById('google-btn') as HTMLElement, {
+    //   theme: 'outline',
+    //   size: 'medium',
+    //   shape: 'rectangle',
+    //   text: 'continue_with',
+    //   width: '500px',
+    //   type: 'standard',
+    // }
+    // );
+
+    const checkGoogleButton = () => {
+      if (document.getElementById('google-btn')) {
+        loadGoogleButton();
+      } else {
+        console.error('Google button not found, retrying...');
+        setTimeout(checkGoogleButton, 1000); 
+      }
+    };
+  
+    checkGoogleButton()
+
+
   }
 
   handleAuth(res: GoogleResponse) {
@@ -78,7 +103,7 @@ export class AuthComponent {
       let payload = this.decodeToken(res.credential)
       console.log(payload);
       const userData: IUserAuthentication = {
-        username: payload.name,
+        name: payload.name,
         email: payload.email,
         image: payload.picture
       };

@@ -19,3 +19,38 @@
 //     -moz-user-select: none; /* For Firefox */
 //   }
 
+/* Keyframes for the Chat button sliding in from right to left */
+@keyframes slide-in-right {
+    0% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  // /* Keyframes for the Group Chat button sliding in from left to right */
+  // @keyframes slide-in-left {
+  //   0% {
+  //     transform: translateX(-100%);
+  //     opacity: 0;
+  //   }
+  //   100% {
+  //     transform: translateX(0);
+  //     opacity: 1;
+  //   }
+  // }
+  
+  // /* Apply the right-to-left animation for the Chat button */
+  // .animate-slide-in-right {
+  //   animation: slide-in-right 0.5s ease-out forwards;
+  // }
+  
+  // /* Apply the left-to-right animation for the Group Chat button */
+  // .animate-slide-in-left {
+  //   animation: slide-in-left 0.5s ease-out forwards;
+  // }
+  
+
