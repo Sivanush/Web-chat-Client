@@ -9,6 +9,9 @@ import { Message } from '../../../interface/service/chat.interface';
 import { ToasterService } from '../../service/toaster.service';
 import { CloudinaryService } from '../../service/cloudinary.service';
 import { GroupChatService } from '../../service/group-chat.service';
+import { Group, GroupChat } from '../../../interface/service/group-chat.interface';
+import { UserService } from '../../service/user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-group-chat',
@@ -26,15 +29,41 @@ export class GroupChatComponent {
   isEmojiToggle: boolean = false
   groupId!:string
   userId:string = ''
-  messages: Message[] = []
+  messages: GroupChat[] = []
   selectedFile: File | null = null;
   filePreview: string | null = null;
   selectedFileType: 'image' | 'video' | 'pdf' | null = null;
   isUploading: boolean = false
   private shouldScrollToBottom: boolean = false;
+  groupData:Group|null = null
+  private subscriptions: Subscription[] = [];
 
-  constructor(private toasterService:ToasterService,private cloudinaryService:CloudinaryService, private changeDetectorRef: ChangeDetectorRef,private groupChatService:GroupChatService) {
-    
+  constructor(private toasterService:ToasterService,private cloudinaryService:CloudinaryService, private changeDetectorRef: ChangeDetectorRef,private groupChatService:GroupChatService, private userService:UserService) {}
+
+
+  ngOnInit(): void {
+    this.userId = this.userService.getUserId()
+
+    this.subscriptions.push(
+      this.groupChatService.messages$.subscribe(messages => {
+        console.log(messages);
+        this.messages = messages;
+      })
+    );
+
+    // Get initial messages
+
+    // Subscribe to latest messages
+    this.subscriptions.push(
+      this.groupChatService.getLatestGroupMessage().subscribe(message => {
+        // Handle new message if needed separately from messages$
+        console.log('New message received:', message);
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   addEmoji(event: { emoji: EmojiData }) {
@@ -48,8 +77,21 @@ export class GroupChatComponent {
     }
   }
 
+  getGroupData(groupId:string){
+    this.groupChatService.getGroupData(groupId).subscribe({
+      next:(data)=>{
+        this.groupData = data
+      },
+      error:(err)=>{
+        console.log(err);
+      }
+    })
+  }
+
   getGroupId(event:string){
     this.groupId = event
+    this.getGroupData(this.groupId)
+    this.groupChatService.getGroupMessages(this.groupId);
   }
 
   toggleEmoji() {
@@ -111,7 +153,7 @@ export class GroupChatComponent {
             break;
         }
   
-        this.groupChatService.sendMessage(uploadResult, this.userId, this.groupId , this.selectedFileType)
+        this.groupChatService.sendGroupMessage(uploadResult, this.userId, this.groupId , this.selectedFileType)
   
         this.selectedFile = null;
         this.filePreview = null;
@@ -127,7 +169,7 @@ export class GroupChatComponent {
       this.isEmojiToggle = false;
       this.isSending = true;
   
-      this.groupChatService.sendMessage(this.message, this.userId, this.groupId);
+      this.groupChatService.sendGroupMessage(this.message, this.userId, this.groupId);
       this.message = '';
       this.shouldScrollToBottom = true;
   

@@ -44,8 +44,6 @@ export class ChatService {
     });
 
     this.socket.on('userStatus', (status: UserStatus) => {
-      console.log('✅✅✅✅✅✅✅✅✅✅');
-      
       this.userStatusSubject.next(status);
     });
   }

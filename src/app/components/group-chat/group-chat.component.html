@@ -4,17 +4,17 @@
     <!-- Main Chat Area -->
     <main class="flex-1 flex flex-col relative">
         <!-- Chat Header -->
-        <div class="bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+        <div  *ngIf="groupId" class="bg-white border-b border-gray-200 p-4 flex justify-between items-center">
             <div class="flex items-center space-x-3">
                 <label for="my-drawer-2" class="drawer-button lg:hidden">
                     <svg data-slot="icon" class="h-8" fill="blue" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
                       </svg>
                 </label>
-                <img [src]="" 
-                    class="w-12 h-12 rounded-full border-2 border-gray-300 shadow-sm" />
+                <img [src]="groupData?.image" 
+                    class="w-12 h-12 rounded-full border-2 border-gray-300 shadow-sm object-cover" />
                 <div>
-                    <h2 class="font-semibold text-lg text-gray-800">Group Name</h2>
+                    <h2 class="font-semibold text-lg text-gray-800">{{groupData?.name}}</h2>
                     <!-- <p class="text-sm text-gray-500">{{receiverData.status}}</p> -->
                 </div>
             </div>
@@ -34,26 +34,26 @@
         <div *ngIf="groupId" class="flex-1 flex flex-col h-[calc(100vh-160px)]">
             <div #scrollContainer class="flex-1 p-4 overflow-y-auto bg-gray-50">
                 <div class="space-y-6">
-                    <div *ngFor="let msg of messages" class="flex" [ngClass]="{'justify-end': msg.sender === userId}">
+                    <div *ngFor="let msg of messages" class="flex" [ngClass]="{'justify-end': msg.sender._id === userId}">
                         @if(msg.type === 'text'){
-                            <div class="flex items-end" [ngClass]="{'flex-row-reverse': msg.sender === userId}">
-                                <img *ngIf="msg.sender !== userId" [src]="msg.receiver.image" alt="User" class="w-8 h-8 rounded-full mr-2" />
+                            <div class="flex items-end" [ngClass]="{'flex-row-reverse': msg.sender._id === userId}">
+                                <img *ngIf="msg.sender._id !== userId" [src]="msg.sender.image" alt="User" class="w-8 h-8 rounded-full mr-2" />
                                 <div class="p-3 rounded-lg shadow max-w-xs" [ngClass]="{
-                                    'bg-indigo-500 text-white rounded-br-none ml-2': msg.sender === userId,
-                                    'bg-white text-gray-800 rounded-bl-none mr-2': msg.sender !== userId
+                                    'bg-indigo-500 text-white rounded-br-none ml-2': msg.sender._id === userId,
+                                    'bg-white text-gray-800 rounded-bl-none mr-2': msg.sender._id !== userId
                                 }">
                                     <p class="text-sm">{{ msg.content }}</p>
-                                    <p class="text-xs mt-1" [ngClass]="{ 'text-indigo-200': msg.sender === userId, 'text-gray-500': msg.sender !== userId }">
+                                    <p class="text-xs mt-1" [ngClass]="{ 'text-indigo-200': msg.sender._id === userId, 'text-gray-500': msg.sender._id !== userId }">
                                         {{ msg.timestamp | date:'shortTime' }}
                                     </p>
                                 </div>
                             </div>
                         }@else if(msg.type === 'image' ){
-                            <div class="flex items-end" [ngClass]="{'flex-row-reverse': msg.sender === userId}">
-                            <img class=" h-52" [src]="msg.content" [alt]="msg.receiver._id">
+                            <div class="flex items-end" [ngClass]="{'flex-row-reverse': msg.sender._id === userId}">
+                            <img class=" h-52" [src]="msg.content" [alt]="msg.sender.image">
                         </div>
                         }@else if(msg.type === 'video' ){
-                        <div class="flex items-end" [ngClass]="{'flex-row-reverse': msg.sender === userId}">
+                        <div class="flex items-end" [ngClass]="{'flex-row-reverse': msg.sender._id === userId}">
                             <video class="h-64" [src]="msg.content" controls ></video>
                         </div>
                         }
