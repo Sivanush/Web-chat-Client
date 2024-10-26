@@ -4,6 +4,8 @@ import { Group } from '../../../../interface/service/group-chat.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgxSonnerToaster } from 'ngx-sonner';
+import { ToasterService } from '../../../service/toaster.service';
+import { UpdateGroupsService } from '../../../service/subject/update-groups.service';
 
 @Component({
   selector: 'app-search-group',
@@ -18,7 +20,7 @@ export class SearchGroupComponent {
   isToaster = false
   private searchTimeout: number | undefined
 
-  constructor(private groupService: GroupChatService) {
+  constructor(private groupService: GroupChatService,private toasterService:ToasterService,private updateGroupsService:UpdateGroupsService) {
 
   }
 
@@ -50,7 +52,17 @@ export class SearchGroupComponent {
   }
 
   onJoinGroup(groupId: string) {
-
+    this.groupService.JoinGroup(groupId).subscribe({
+      next:(result)=>{
+        console.log(result);
+        this.toasterService.showSuccess('Group Joined Successfully!')
+      },
+      error:(err)=>{
+        console.log(err);
+        this.toasterService.showError(err.error.message)
+        this.updateGroupsService.notifyUpdate()
+      }
+    })
   }
 
   ngOnDestroy(): void {

@@ -17,15 +17,17 @@ export class GroupChatService {
   public messages$ = this.messagesSubject.asObservable();
 
 
-  constructor(private http: HttpClient) {  this.socket = io(environment.serverUrlSocket), this.setupSocketListeners()}
+  constructor(private http: HttpClient) { this.socket = io(environment.serverUrlSocket), this.setupSocketListeners() }
 
   private setupSocketListeners() {
     this.socket.on('newGroupMessage', (message: GroupChat) => {
+      console.log('👍👍👍👍👍👍👍👍👍👍👍👍👍', message);
       const currentMessages = this.messagesSubject.value;
       this.messagesSubject.next([...currentMessages, message]);
     });
 
     this.socket.on('allGroupMessages', (messages: GroupChat[]) => {
+      console.log('✅✅✅✅✅✅✅✅✅', messages);
       this.messagesSubject.next(messages);
     });
   }
@@ -35,16 +37,29 @@ export class GroupChatService {
     return this.http.get<Group[]>(`${this.serverUrl}/group-chat/s?input=${input}`)
   }
 
-  createGroup(groupData: Group):Observable<Group[]> {
+  createGroup(groupData: Group): Observable<Group[]> {
     return this.http.post<Group[]>(`${this.serverUrl}/group-chat/create`, groupData)
   }
 
-  getMyGroups():Observable<Group[]>{
+  getMyGroups(): Observable<Group[]> {
     return this.http.get<Group[]>(`${this.serverUrl}/group-chat/my-group`)
   }
 
-  getGroupData(groupId:string):Observable<Group>{
+  getGroupData(groupId: string): Observable<Group> {
     return this.http.get<Group>(`${this.serverUrl}/group-chat/${groupId}`)
+  }
+
+  JoinGroup(groupId:string): Observable<Group>{
+    return this.http.get<Group>(`${this.serverUrl}/group-chat/join/${groupId}`)
+  }
+
+
+  joinGroupRoom(groupId: string) {
+    this.socket.emit('joinGroup', groupId);
+  }
+
+  leaveGroupRoom(groupId: string): void {
+    this.socket.emit('leaveGroup', groupId);
   }
 
 

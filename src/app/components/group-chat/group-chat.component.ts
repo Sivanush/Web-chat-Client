@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-group-chat',
   standalone: true,
-  imports: [CommonModule, RouterLink, GroupChatNavbarComponent, PickerComponent,FormsModule],
+  imports: [CommonModule, RouterLink, GroupChatNavbarComponent, PickerComponent, FormsModule],
   templateUrl: './group-chat.component.html',
   styleUrl: './group-chat.component.scss'
 })
@@ -27,43 +27,50 @@ export class GroupChatComponent {
   private sendCooldown: number = 1500;
   message: string = ''
   isEmojiToggle: boolean = false
-  groupId!:string
-  userId:string = ''
+  groupId!: string
+  userId: string = ''
   messages: GroupChat[] = []
   selectedFile: File | null = null;
   filePreview: string | null = null;
   selectedFileType: 'image' | 'video' | 'pdf' | null = null;
   isUploading: boolean = false
   private shouldScrollToBottom: boolean = false;
-  groupData:Group|null = null
+  groupData: Group | null = null
   private subscriptions: Subscription[] = [];
 
-  constructor(private toasterService:ToasterService,private cloudinaryService:CloudinaryService, private changeDetectorRef: ChangeDetectorRef,private groupChatService:GroupChatService, private userService:UserService) {}
+  constructor(private toasterService: ToasterService, private cloudinaryService: CloudinaryService, private changeDetectorRef: ChangeDetectorRef, private groupChatService: GroupChatService, private userService: UserService) { }
 
 
   ngOnInit(): void {
     this.userId = this.userService.getUserId()
 
     this.subscriptions.push(
-      this.groupChatService.messages$.subscribe(messages => {
-        console.log(messages);
+      this.groupChatService.messages$.subscribe((messages: GroupChat[]) => {
         this.messages = messages;
+        this.shouldScrollToBottom = true;
+        this.changeDetectorRef.detectChanges(); // Trigger view update
       })
     );
-
     // Get initial messages
 
     // Subscribe to latest messages
-    this.subscriptions.push(
-      this.groupChatService.getLatestGroupMessage().subscribe(message => {
-        // Handle new message if needed separately from messages$
-        console.log('New message received:', message);
-      })
-    );
+    // this.subscriptions.push(
+    //   this.groupChatService.getLatestGroupMessage().subscribe(message => {
+    //     // Handle new message if needed separately from messages$
+    //     console.log('New message received:', message);
+    //     this.scrollToBottom();  
+    //   })
+    // );
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
+    if (this.groupId) {
+      this.groupChatService.leaveGroupRoom(this.groupId);
+    }
+    
+    if (this.subscriptions) {
+      this.subscriptions.forEach((sub) => sub.unsubscribe())
+    }
   }
 
   addEmoji(event: { emoji: EmojiData }) {
@@ -77,19 +84,23 @@ export class GroupChatComponent {
     }
   }
 
-  getGroupData(groupId:string){
+  getGroupData(groupId: string) {
     this.groupChatService.getGroupData(groupId).subscribe({
-      next:(data)=>{
+      next: (data) => {
         this.groupData = data
       },
-      error:(err)=>{
+      error: (err) => {
         console.log(err);
       }
     })
   }
 
-  getGroupId(event:string){
+  getGroupId(event: string) {
+    if (this.groupId) {
+      this.groupChatService.leaveGroupRoom(this.groupId);
+    }
     this.groupId = event
+    this.groupChatService.joinGroupRoom(this.groupId);
     this.getGroupData(this.groupId)
     this.groupChatService.getGroupMessages(this.groupId);
   }
@@ -120,59 +131,59 @@ export class GroupChatComponent {
   }
 
 
-  
+
 
   async sendMessage() {
     if (this.isSending) {
       return;
     }
-  
+
     if (this.selectedFile && this.selectedFileType) {
       try {
         this.message = '';
         this.isUploading = true;
         let uploadResult!: string;
-  
+
         switch (this.selectedFileType) {
           case 'image':
             await this.toasterService.loadingToaster(this.cloudinaryService.uploadImage(this.selectedFile), 'Image Uploaded!')
               .then(data => uploadResult = data.url)
               .catch(err => console.log(err));
             break;
-  
+
           case 'video':
             await this.toasterService.loadingToaster(this.cloudinaryService.uploadVideo(this.selectedFile), 'Video Uploaded!')
               .then(data => uploadResult = data.url)
               .catch(err => console.log(err));
             break;
-  
+
           case 'pdf':
             await this.toasterService.loadingToaster(this.cloudinaryService.uploadImage(this.selectedFile), 'Document Uploaded!')
               .then(data => uploadResult = data.url)
               .catch(err => console.log(err));
             break;
         }
-  
-        this.groupChatService.sendGroupMessage(uploadResult, this.userId, this.groupId , this.selectedFileType)
-  
+
+        this.groupChatService.sendGroupMessage(uploadResult, this.userId, this.groupId, this.selectedFileType)
+
         this.selectedFile = null;
         this.filePreview = null;
         this.selectedFileType = null;
         this.shouldScrollToBottom = true;
-  
+
       } catch (error) {
         console.log(error);
       }
     }
-  
+
     if (this.message.trim()) {
       this.isEmojiToggle = false;
       this.isSending = true;
-  
+
       this.groupChatService.sendGroupMessage(this.message, this.userId, this.groupId);
       this.message = '';
       this.shouldScrollToBottom = true;
-  
+
       setTimeout(() => {
         this.isSending = false;
       }, this.sendCooldown);
