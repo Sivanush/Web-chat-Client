@@ -56,6 +56,7 @@ export class SearchGroupComponent {
       next:(result)=>{
         console.log(result);
         this.toasterService.showSuccess('Group Joined Successfully!')
+        this.updateGroupsService.notifyUpdate()
       },
       error:(err)=>{
         console.log(err);
