@@ -8,24 +8,39 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterModule,CommonModule,FormsModule],
+  imports: [RouterModule, CommonModule, FormsModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
 
 
-  @Output() receiverId = new EventEmitter<string>() 
+  @Output() receiverId = new EventEmitter<string>()
   isAddUser: boolean = false
   connections: User[] | null = null
+  userId!: string
+  username!: string
 
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
     this.getAllConnections()
+    this.userId = this.userService.getUserId()
+    if (this.userId) {
+      this.getUsername()
+    }
   }
 
-  emitTheReceiverId(userId:string): void {
+
+  getUsername() {
+    this.userService.getUserData(this.userId).subscribe({
+      next:(res)=>{
+        this.username = res.username
+      }
+    })
+  }
+
+  emitTheReceiverId(userId: string): void {
     this.receiverId.emit(userId)
   }
 

@@ -1,5 +1,4 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-// import { AuthService } from '../../service/auth.service';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -68,21 +67,7 @@ export class AuthComponent {
         console.log(res)
         this.handleAuth(res)
       }
-    });
-
-
-  
-
-    // google.accounts.id.renderButton(
-    //   document.getElementById('google-btn') as HTMLElement, {
-    //   theme: 'outline',
-    //   size: 'medium',
-    //   shape: 'rectangle',
-    //   text: 'continue_with',
-    //   width: '500px',
-    //   type: 'standard',
-    // }
-    // );
+    })
 
     const checkGoogleButton = () => {
       if (document.getElementById('google-btn')) {
